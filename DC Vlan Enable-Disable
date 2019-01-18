@@ -20,9 +20,6 @@ while True:
 
     datacenter = input("Please Select: ")
 
-    username = input('Enter your SSH username: ')
-    password = getpass()
-
     "Here we are opening our files"
 
     with open('enable_command') as f:
@@ -39,6 +36,9 @@ while True:
 
 
     if datacenter == "1":
+        username = input('Enter your SSH username: ')
+        password = getpass()
+
         for devices in MV:
             print ('Connecting to device and disabling Vlan ' + devices)
             ip_address_of_device = devices
@@ -103,8 +103,12 @@ while True:
 
             output = net_connect.send_config_set(enable_command)
             print (output)
+        break
 
     elif datacenter == "2":
+        username = input('Enter your SSH username: ')
+        password = getpass()
+
         for devices in Boise:
             print ('Connecting to device and disabling Vlan ' + devices)
             ip_address_of_device = devices
@@ -169,6 +173,7 @@ while True:
 
             output = net_connect.send_config_set(enable_command)
             print (output)
+        break
 
     elif datacenter == "3":
         break
