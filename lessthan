@@ -1,0 +1,12 @@
+n = int(input("How many pairs: "))
+sum_list = []
+
+for couple in map(int, range(0, n)):
+    x = list(map(int, input("Enter numbers: ").split()))
+
+    if x[0] < x[1]:
+        total = x[0]
+    else:
+        total = x[1]
+    sum_list.append(total)
+print(sum_list)
