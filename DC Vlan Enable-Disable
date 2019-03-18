@@ -6,11 +6,6 @@ from netmiko.ssh_exception import NetMikoTimeoutException
 from paramiko.ssh_exception import SSHException
 from netmiko.ssh_exception import AuthenticationException
 
-menu = {}
-menu['1'] = "Make Boise Active"
-menu['2'] = "Make MV Active"
-menu['3'] = "Exit"
-
 
 def vlanchange(dc, command):
     for devices in dc:
@@ -44,6 +39,11 @@ def vlanchange(dc, command):
         output = net_connect.send_config_set(command)
         print(output)
 
+menu = {}
+menu['1'] = "PACS Vlan 889"
+menu['2'] = "ISCV Vlan 383"
+menu['3'] = "Rhapsody Vlan 188"
+menu['4'] = "Exit"
 
 while True:
     options = sorted(menu.keys())
@@ -51,47 +51,168 @@ while True:
     for entry in options:
         print(entry, menu[entry])
 
-    datacenter = input("Please Select: ")
+    vlan = input("Please Select which vlan you would like to change: ")
 
-    "Here we are opening our files"
+    if vlan == "1":
 
-    with open('enable_command') as f:
-        enable_command = f.read().splitlines()
+        vlanmenu = {}
+        vlanmenu['1'] = "MV"
+        vlanmenu['2'] = "Boise"
+        vlanmenu['3'] = "Exit"
 
-    with open('disable_command') as f:
-        disable_command = f.read().splitlines()
+        while True:
+            options = sorted(vlanmenu.keys())
 
-    with open('Boise') as f:
-        Boise = f.read().splitlines()
+            for entry in options:
+                print(entry, vlanmenu[entry])
 
-    with open('MV') as f:
-        MV = f.read().splitlines()
+            dc = input("Which DC needs to be active?")
 
-    if datacenter == "1":
-        username = input('Enter your SSH username: ')
-        password = getpass()
+            with open('enable_pacs') as f:
+                enable_pacs = f.read().splitlines()
 
-        vlanchange(MV, disable_command)
+            with open('disable_pacs') as f:
+                disable_pacs = f.read().splitlines()
 
-        """This uses the enable_devices_list of devices that we want to enable
-        and performs the vlan enable commands from enable_command file"""
+            with open('Boise') as f:
+                boise = f.read().splitlines()
 
-        vlanchange(Boise, enable_command)
-        break
+            with open('MV') as f:
+                mv = f.read().splitlines()
 
-    elif datacenter == "2":
-        username = input('Enter your SSH username: ')
-        password = getpass()
+            if dc == "1":
 
-        vlanchange(Boise, disable_command)
+                username = input('Enter your SSH username: ')
+                password = getpass()
 
-        """This uses the enable_devices_list of devices that we want to enable
-        and performs the vlan enable commands from enable_command file"""
+                vlanchange(boise, disable_pacs)
 
-        vlanchange(MV, enable_command)
-        break
+                vlanchange(mv, enable_pacs)
+                exit()
 
-    elif datacenter == "3":
+            elif dc == "2":
+                username = input('Enter your SSH username: ')
+                password = getpass()
+
+                vlanchange(mv, disable_pacs)
+
+                vlanchange(boise, enable_pacs)
+                exit()
+
+            elif dc == "3":
+                exit()
+
+            else:
+                print("Not a valid selection, please select again")
+                break
+
+    elif vlan == "2":
+
+        vlanmenu = {}
+        vlanmenu['1'] = "MV"
+        vlanmenu['2'] = "Boise"
+        vlanmenu['3'] = "Exit"
+
+        while True:
+            options = sorted(vlanmenu.keys())
+
+            for entry in options:
+                print(entry, vlanmenu[entry])
+
+            dc = input("Which DC needs to be active?")
+
+            with open('enable_iscv') as f:
+                enable_iscv = f.read().splitlines()
+
+            with open('disable_iscv') as f:
+                disable_iscv = f.read().splitlines()
+
+            with open('Boise') as f:
+                boise = f.read().splitlines()
+
+            with open('MV') as f:
+                mv = f.read().splitlines()
+
+            if dc == "1":
+
+                username = input('Enter your SSH username: ')
+                password = getpass()
+
+                vlanchange(boise, disable_iscv)
+
+                vlanchange(mv, enable_iscv)
+                exit()
+
+            elif dc == "2":
+                username = input('Enter your SSH username: ')
+                password = getpass()
+
+                vlanchange(mv, disable_iscv)
+
+                vlanchange(boise, enable_iscv)
+                exit()
+
+            elif dc == "3":
+                exit()
+
+            else:
+                print("Not a valid selection, please select again")
+                break
+
+    elif vlan == "3":
+
+        vlanmenu = {}
+        vlanmenu['1'] = "MV"
+        vlanmenu['2'] = "Boise"
+        vlanmenu['3'] = "Exit"
+
+        while True:
+            options = sorted(vlanmenu.keys())
+
+            for entry in options:
+                print(entry, vlanmenu[entry])
+
+            dc = input("Which DC needs to be active?")
+
+            with open('enable_rhapsody') as f:
+                enable_rhapsody = f.read().splitlines()
+
+            with open('disable_rhapsody') as f:
+                disable_rhapsody = f.read().splitlines()
+
+            with open('Boise') as f:
+                boise = f.read().splitlines()
+
+            with open('MV') as f:
+                mv = f.read().splitlines()
+
+            if dc == "1":
+
+                username = input('Enter your SSH username: ')
+                password = getpass()
+
+                vlanchange(boise, disable_rhapsody)
+
+                vlanchange(mv, enable_rhapsody)
+                exit()
+
+            elif dc == "2":
+                username = input('Enter your SSH username: ')
+                password = getpass()
+
+                vlanchange(mv, disable_rhapsody)
+
+                vlanchange(boise, enable_rhapsody)
+                exit()
+
+            elif dc == "3":
+                exit()
+
+            else:
+                print("Not a valid selection, please select again")
+                break
+
+    elif vlan == "4":
         break
     else:
         print("Not a valid selection")
